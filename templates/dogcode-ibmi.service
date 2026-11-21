@@ -1,0 +1,21 @@
+[Unit]
+Description=Dogcode conector JDBC de prueba (PUB400)
+After=network.target
+
+[Service]
+User=dogcode
+Group=dogcode
+WorkingDirectory=/opt/dogcode/current
+Environment=PYTHONDONTWRITEBYTECODE=1
+LoadCredential=usuario:/etc/dogcode/ibmi.usuario
+LoadCredential=password:/etc/dogcode/ibmi.password
+ExecStart=/opt/dogcode/current/.venv/bin/python -m uvicorn runtime:ibmi --factory --host 127.0.0.1 --port 8001 --workers 1
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+
+[Install]
+WantedBy=multi-user.target

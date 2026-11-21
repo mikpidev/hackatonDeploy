@@ -1,0 +1,24 @@
+[Unit]
+Description=Dogcode API y web
+After=network.target
+
+[Service]
+User=dogcode
+Group=dogcode
+WorkingDirectory=/opt/dogcode/current
+EnvironmentFile=/etc/dogcode/api.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/dogcode/current/.venv/bin/python -m uvicorn runtime:api --factory --host 127.0.0.1 --port 8000 --workers 1 --proxy-headers --forwarded-allow-ips=127.0.0.1
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+BindPaths=/var/lib/dogcode/altas_pendientes.txt:/opt/dogcode/current/data/altas_pendientes.txt
+BindPaths=/var/lib/dogcode/registros_locales:/opt/dogcode/current/data/registros_locales
+ReadWritePaths=/var/lib/dogcode /opt/dogcode/current/data/altas_pendientes.txt /opt/dogcode/current/data/registros_locales
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target
